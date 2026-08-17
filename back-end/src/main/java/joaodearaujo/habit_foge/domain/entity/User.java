@@ -86,6 +86,8 @@ public class User implements UserDetails  {
     @Override
     public boolean isCredentialsNonExpired() { return true; }
 
+    public List<Routine> getRoutines() { return routines;}
+
     @Override
     public boolean isEnabled() { return true; }
 }

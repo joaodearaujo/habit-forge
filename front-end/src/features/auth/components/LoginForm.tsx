@@ -1,157 +1,164 @@
 import { useState } from 'react';
-import { api } from '@/features/routine/api/api';
+import { api } from '@/shared/api/api';
+import { ThemeButton } from '@/components/ui/Buttons/ThemeButton';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import type { UserResponse } from '@/shared/types/userResponse.type';
+import { cn } from '@/shared/util';
+import { validateLoginFields } from '../validation/authSchema';
 
-interface LoginFormProps {
-    onLoginSuccess: () => void;
-}
+export function LoginForm() {
+  const { login } = useAuth();
 
-interface UserResponse {
-    id: string;
-    name: string;
-    email: string;
-}
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
-type Mode = 'login' | 'register';
+  const showError = hasAttemptedSubmit && error.length > 0;
 
-export function LoginForm({ onLoginSuccess }: LoginFormProps) {
-    const [mode, setMode] = useState<Mode>('login');
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setHasAttemptedSubmit(true);
 
-    const switchMode = (nextMode: Mode) => {
-        setMode(nextMode);
-        setError('');
-    };
+    const validation = validateLoginFields(email, password);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
-        setIsLoading(true);
+    if (!validation.isValid) {
+      setError(validation.errorMessage);
+      return;
+    }
 
-        try {
-            if (mode === 'register') {
-                await api.post<UserResponse, { name: string; email: string; password: string }>(
-                    'v1/user',
-                    { name, email, password }
-                );
-            }
-            const user = await api.post<UserResponse, { email: string; password: string }>(
-                'v1/auth/login',
-                { email, password }
-            );
-            localStorage.setItem('user', JSON.stringify(user));
-            onLoginSuccess();
-        } catch (err) {
-            setError(
-                mode === 'register'
-                    ? 'Não foi possível criar a conta. Verifique os dados e tente novamente: ' + err
-                    : 'Credenciais inválidas. Verifique seu e-mail e senha: ' + err
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    setError('');
+    setIsLoading(true);
 
-    return (
-        <main className="w-full max-w-md flex flex-col mx-auto mt-20 p-8 gap-2 bg-surface rounded-xl border-2 border-surface2 border-b-8">
-            <div className='flex flex-col items-center gap-3 justify-center'>
-                <img
-                    className='size-16' 
-                    src="/habitforge-favicon.svg" alt="" />
-                <h2 className="text-2xl font-bold mb-6 leading-none text-ink text-center font-secondary">
-                    Welcome to HabitForge!
-                </h2>
-            </div>
+    try {
+      const user = await api.post<
+        UserResponse,
+        { email: string; password: string }
+      >('v1/auth/login', { email, password });
+      login(user);
+    } catch (err) {
+      console.error(err);
+      setError('Invalid credentials. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-            <div className="flex mb-4 rounded-lg border border-surface2 overflow-hidden">
-                <button
-                    type="button"
-                    onClick={() => switchMode('login')}
-                    className={`flex-1 p-2 text-sm font-semibold transition-colors ${
-                        mode === 'login' ? 'bg-ink text-bg' : 'bg-bg text-muted'
-                    }`}
-                >
-                    Login
-                </button>
-                <button
-                    type="button"
-                    onClick={() => switchMode('register')}
-                    className={`flex-1 p-2 text-sm font-semibold transition-colors ${
-                        mode === 'register' ? 'bg-ink text-bg' : 'bg-bg text-muted'
-                    }`}
-                >
-                   Register
-                </button>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                {mode === 'register' && (
-                    <fieldset className="flex flex-col items-start gap-1 border-none p-0 m-0">
-                        <label htmlFor="name" className="text-sm font-medium text-muted">
-                            Name
-                        </label>
-                        <input
-                            id="name"
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                            className="p-3 w-full rounded-lg border border-surface2 bg-bg text-ink focus:outline-none focus:border-primary transition-colors"
-                            placeholder="Your name"
-                        />
-                    </fieldset>
-                )}
+  return (
+    <main className="w-full h-full flex flex-col gap-10 p-4 font-primary">
+      <section className="flex justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-4xl font-medium text-left text-ink">Log in</h1>
+          <p className="text-sm text-left text-ink">
+            By logging in, you agree to our{' '}
+            <a
+              className="font-medium text-ink hover:underline cursor-pointer"
+              href="#"
+            >
+              Terms Of Use
+            </a>
+          </p>
+        </div>
+        <ThemeButton />
+      </section>
 
-                <fieldset className="flex flex-col items-start gap-1 border-none p-0 m-0">
-                    <label htmlFor="email" className="text-sm font-medium text-muted">
-                        E-mail
-                    </label>
-                    <input 
-                        id="email"
-                        type="email" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="p-3 w-full rounded-lg border border-surface2 bg-bg text-ink focus:outline-none focus:border-primary transition-colors"
-                        placeholder="youremail@email.com"
-                    />
-                </fieldset>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 relative">
+        <div className="flex-1 flex flex-col gap-2">
+          <label
+            htmlFor="email"
+            className="leading-none text-left text-sm text-ink"
+          >
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (showError) setError('');
+            }}
+            placeholder="Your email"
+            aria-invalid={showError}
+            aria-describedby={showError ? 'login-form-error' : undefined}
+            className={cn(
+              'h-12 rounded-2xl p-4 text-ink bg-surface border font-light ',
+              !hasAttemptedSubmit && 'border-line',
+              hasAttemptedSubmit && (error ? 'border-red' : 'border-green-500'),
+            )}
+          />
+        </div>
 
-                <fieldset className="flex flex-col items-start gap-1 border-none p-0 m-0">
-                    <label htmlFor="password" className="text-sm font-medium text-muted">
-                        Password
-                    </label>
-                    <input 
-                        id="password"
-                        type="password" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength={mode === 'register' ? 8 : undefined}
-                        className="p-3 rounded-lg  w-full border border-surface2 bg-bg text-ink focus:outline-none focus:border-primary transition-colors"
-                        placeholder="••••••••••••"
-                    />
-                </fieldset>
+        <div className="flex-1 flex flex-col gap-2 shrink-0">
+          <label
+            htmlFor="password"
+            className="leading-none text-left text-sm text-ink"
+          >
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (showError) setError('');
+            }}
+            placeholder="Your password"
+            aria-invalid={showError}
+            className={cn(
+              'h-12 rounded-2xl p-4 text-ink bg-surface border font-light "',
+              !hasAttemptedSubmit && 'border-line',
+              hasAttemptedSubmit && (error ? 'border-red' : 'border-green-500'),
+            )}
+          />
+        </div>
 
-                {error && (
-                    <p className="text-red-500 text-sm font-medium text-center">
-                        {error}
-                    </p>
-                )}
+        {showError && (
+          <span
+            id="login-form-error"
+            role="alert"
+            aria-live="polite"
+            className="text-xs text-red font-secondary px-1 text-wrap"
+          >
+            {error}
+          </span>
+        )}
 
-                <button 
-                    type="submit" 
-                    disabled={isLoading}
-                    className="mt-2 p-3 bg-ink text-bg rounded-lg font-semibold cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                    {isLoading
-                        ? mode === 'register' ? 'Criando conta...' : 'Autenticando...'
-                        : mode === 'register' ? 'Criar conta' : 'Entrar'}
-                </button>
-            </form>
-        </main>
-    );
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="bg-orange-400 px-6 py-4 rounded-2xl font-secondary font-medium text-white cursor-pointer hover:bg-orange-500 hover:translate-y-1 active:translate-y-1.5 transition-all ease-in-out duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Logging in...' : 'Connect'}
+        </button>
+      </form>
+
+      <div className="flex w-full items-center gap-3">
+        <hr className="flex-1 text-line" />
+        <span className="text-ink">Or</span>
+        <hr className="flex-1 text-line" />
+      </div>
+
+      <section className="w-full flex flex-col gap-4">
+        <a
+          href=""
+            className="rounded-2xl px-6 py-4 bg-surface hover:bg-surface2 border text-ink border-line text-center border-b-6 hover:translate-y-0.5 active:translate-y-1 transition-all ease-in-out duration-300"
+          >
+          Sign in with Google
+        </a>
+        <p className="text-xs text-ink">
+          Don't you have an account?{' '}
+          <Link
+            className="font-medium text-ink hover:underline cursor-pointer"
+            to=""
+          >
+            Click here
+          </Link>
+        </p>
+      </section>
+    </main>
+  );
 }

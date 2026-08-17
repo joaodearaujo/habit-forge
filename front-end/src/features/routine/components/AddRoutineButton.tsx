@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import { Plus } from "lucide-react";
-import { useCreateRoutine } from "../hooks/useRoutine";
-import { cn } from "@/shared/util";
+import { useEffect, useRef, useState } from 'react';
+import { Plus } from 'lucide-react';
+import { useCreateRoutine } from '../hooks/useRoutine';
+import { cn } from '@/shared/util';
 
-type FormState = "closed" | "open" | "closing";
+type FormState = 'closed' | 'open' | 'closing';
 
 const TITLE_MIN = 3;
 const TITLE_MAX = 50;
 
 export function AddRoutineButton() {
-  const [state, setState] = useState<FormState>("closed");
-  const [title, setTitle] = useState("");
+  const [state, setState] = useState<FormState>('closed');
+  const [title, setTitle] = useState('');
 
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -24,22 +24,23 @@ export function AddRoutineButton() {
     charactersLimit: title.length < TITLE_MIN || title.length > TITLE_MAX,
   };
 
-  const isTitleInvalid = titleConditions.emptyInput || titleConditions.charactersLimit;
+  const isTitleInvalid =
+    titleConditions.emptyInput || titleConditions.charactersLimit;
   const showValidationColor = hasAttemptedSubmit;
 
   const resetFields = () => {
-    setTitle("");
+    setTitle('');
     setHasAttemptedSubmit(false);
-    setErrorMessage("");
+    setErrorMessage('');
   };
 
   const openForm = () => {
-    setState("open");
+    setState('open');
   };
 
   const closeForm = () => {
     if (isPending) return;
-    setState("closing");
+    setState('closing');
   };
 
   const cancelForm = () => {
@@ -48,9 +49,9 @@ export function AddRoutineButton() {
   };
 
   const toggleOpen = () => {
-    if (state === "open") {
+    if (state === 'open') {
       closeForm();
-    } else if (state === "closed") {
+    } else if (state === 'closed') {
       openForm();
     }
   };
@@ -60,16 +61,18 @@ export function AddRoutineButton() {
     setHasAttemptedSubmit(true);
 
     if (titleConditions.emptyInput) {
-      setErrorMessage("The title cannot be empty.");
+      setErrorMessage('The title cannot be empty.');
       return;
     }
 
     if (titleConditions.charactersLimit) {
-      setErrorMessage(`The title must be between ${TITLE_MIN} and ${TITLE_MAX} characters long.`);
+      setErrorMessage(
+        `The title must be between ${TITLE_MIN} and ${TITLE_MAX} characters long.`,
+      );
       return;
     }
 
-    setErrorMessage("");
+    setErrorMessage('');
 
     mutate(
       { title, groups: [] },
@@ -82,20 +85,20 @@ export function AddRoutineButton() {
           setErrorMessage(
             error instanceof Error
               ? error.message
-              : "Something went wrong creating the routine. Please try again."
+              : 'Something went wrong creating the routine. Please try again.',
           );
         },
-      }
+      },
     );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       cancelForm();
     }
   };
 
-  const isExpanded = state === "open";
+  const isExpanded = state === 'open';
   const showError = hasAttemptedSubmit && errorMessage.length > 0;
 
   useEffect(() => {
@@ -107,15 +110,18 @@ export function AddRoutineButton() {
   return (
     <div className="flex flex-1 flex-col">
       <div
-        className={cn("grid transition-all duration-500 ease-out",
-          !isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        className={cn(
+          'grid transition-all duration-500 ease-out',
+          !isExpanded
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'grid-rows-[0fr] opacity-0',
         )}
       >
         <div className="flex overflow-hidden">
           <button
             onClick={toggleOpen}
             className={cn(
-              "flex items-center justify-center gap-2 text-xs w-full cursor-pointer font-secondary text-muted border border-dashed border-line rounded-xl px-3 py-2 hover:border-edit hover:text-edit transition-all duration-300"
+              'flex items-center justify-center gap-2 text-xs w-full cursor-pointer font-secondary text-muted border border-dashed border-line rounded-xl px-3 py-2 hover:border-edit hover:text-edit transition-all duration-300',
             )}
           >
             <Plus className="size-4" />
@@ -126,13 +132,15 @@ export function AddRoutineButton() {
 
       <div
         className={cn(
-          "grid h-full w-full transition-all duration-500 ease-out",
-          isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          'grid h-full w-full transition-all duration-500 ease-out',
+          isExpanded
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'grid-rows-[0fr] opacity-0',
         )}
         // it waits the css animations to finish
         onTransitionEnd={(e) => {
-          if (e.target === e.currentTarget && state === "closing") {
-            setState("closed");
+          if (e.target === e.currentTarget && state === 'closing') {
+            setState('closed');
           }
         }}
       >
@@ -149,21 +157,26 @@ export function AddRoutineButton() {
                   value={title}
                   onChange={(e) => {
                     setTitle(e.target.value);
-                    if (showError) setErrorMessage("");
+                    if (showError) setErrorMessage('');
                   }}
                   placeholder="Routine title"
                   aria-invalid={showError}
-                  aria-describedby={showError ? "routine-title-error" : undefined}
+                  aria-describedby={
+                    showError ? 'routine-title-error' : undefined
+                  }
                   className={cn(
-                    "w-full text-xs font-secondary bg-surface border-2 rounded-xl px-3 py-2 outline-none transition-colors duration-200 text-ink",
-                    !showValidationColor && "border-line",
-                    showValidationColor && (isTitleInvalid ? "border-red" : "border-green-500")
+                    'w-full text-xs font-secondary bg-surface border-2 rounded-xl px-3 py-2 outline-none transition-colors duration-200 text-ink',
+                    !showValidationColor && 'border-line',
+                    showValidationColor &&
+                      (isTitleInvalid ? 'border-red' : 'border-green-500'),
                   )}
                 />
                 <div
                   className={cn(
-                    "grid transition-all duration-500 ease-in-out",
-                    showError ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    'grid transition-all duration-500 ease-in-out',
+                    showError
+                      ? 'grid-rows-[1fr] opacity-100'
+                      : 'grid-rows-[0fr] opacity-0',
                   )}
                 >
                   <div className="overflow-hidden">
@@ -186,7 +199,7 @@ export function AddRoutineButton() {
                 disabled={isPending}
                 className="flex-1 text-xs font-secondary font-medium text-ink border-b-3 border-b-surface2 bg-surface rounded-xl px-3 py-2 cursor-pointer hover:bg-flame hover:text-white hover:border-flame-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-500 ease-in-out"
               >
-                {isPending ? "..." : "Create"}
+                {isPending ? '...' : 'Create'}
               </button>
               <button
                 type="button"

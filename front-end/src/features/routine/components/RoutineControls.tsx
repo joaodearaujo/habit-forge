@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Pencil, Check, X } from "lucide-react";
-import { useUpdateRoutine } from "../hooks/useRoutine";
+import { useState } from 'react';
+import { Pencil, Check, X } from 'lucide-react';
+import { useUpdateRoutine } from '../hooks/useRoutine';
 
 interface Props {
   routineId: string;
@@ -27,7 +27,7 @@ export function RoutineControls({ routineId, currentTitle }: Props) {
 
     updateRoutine(
       { id: routineId, body: { title } },
-      { onSuccess: () => setIsEditing(false) }
+      { onSuccess: () => setIsEditing(false) },
     );
   };
 
@@ -53,7 +53,11 @@ export function RoutineControls({ routineId, currentTitle }: Props) {
           onChange={(e) => setTitle(e.target.value)}
           className="text-xs font-secondary bg-surface border-2 border-line rounded-lg px-2 py-1 outline-none w-20"
         />
-        <button onClick={handleSave} disabled={isUpdating} className="text-muted hover:text-ink">
+        <button
+          onClick={handleSave}
+          disabled={isUpdating}
+          className="text-muted hover:text-ink"
+        >
           <Check className="size-4" />
         </button>
         <button onClick={handleCancel} className="text-muted hover:text-ink">

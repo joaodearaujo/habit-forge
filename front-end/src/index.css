@@ -1,27 +1,34 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/geist';
+
+@custom-variant dark (&:is(.dark *));
 @theme {
   /* ── Shared — derived from the HabitForge flame logo ── */
-  --color-flame: #FF7A3D;       /* primary brand — flame mid-tone */
-  --color-flame-dark: #C6401F;  /* flame shadow / pressed states, gradient end */
-  --color-amber: #FFB648;       /* secondary accent — flame highlight */
-  --color-cream: #FFE8A3;       /* tertiary accent — flame tip, subtle highlights */
-  --color-purple: #9E96EF;      /* kept as a cool counterpoint for charts/tags needing contrast */
-  --color-pink: #E76F9C;        /* kept as a cool counterpoint for charts/tags needing contrast */
-  --color-red: #FB2C36;         /* functional: error/danger — unchanged */
-  --color-blue: #5BA2E9;        /* functional: info — unchanged */
-  --color-blue2: #0080ff;       /* functional: info (alt) — unchanged */
-  --color-ok: #35C28D;          /* functional: success — unchanged, reads clearly against orange */
-  --color-edit: var(--color-flame);        /* functional: edit/warning — now matches amber flame highlight */
+  --color-flame: #ff7a3d; /* primary brand — flame mid-tone */
+  --color-flame-dark: #c6401f; /* flame shadow / pressed states, gradient end */
+  --color-amber: #ffb648; /* secondary accent — flame highlight */
+  --color-cream: #ffe8a3; /* tertiary accent — flame tip, subtle highlights */
+  --color-purple: #9e96ef; /* kept as a cool counterpoint for charts/tags needing contrast */
+  --color-pink: #e76f9c; /* kept as a cool counterpoint for charts/tags needing contrast */
+  --color-red: #fb2c36; /* functional: error/danger — unchanged */
+  --color-blue: #5ba2e9; /* functional: info — unchanged */
+  --color-blue2: #0080ff; /* functional: info (alt) — unchanged */
+  --color-ok: #35c28d; /* functional: success — unchanged, reads clearly against orange */
+  --color-edit: var(
+    --color-flame
+  ); /* functional: edit/warning — now matches amber flame highlight */
   --radius-default: 12px;
 
-  --font-primary: 'Inter', sans-serif;
+  --font-primary: 'Poppins', sans-serif;
   --font-secondary: 'Space Grotesk', sans-serif;
 
-  --color-bg: #0F1113;
-  --color-surface: #181B1F;
-  --color-surface2: #20242A;
-  --color-ink: #E9EBEE;
-  --color-muted: #9398A0;
+  --color-bg: #0f1113;
+  --color-surface: #181b1f;
+  --color-surface2: #20242a;
+  --color-ink: #e9ebee;
+  --color-muted: #9398a0;
   --color-line: rgba(255, 255, 255, 0.07);
   --color-line2: rgba(255, 255, 255, 0.13);
   --shadow-aura: 0 0 20px 0 rgba(0, 0, 0, 0.08);
@@ -29,16 +36,16 @@
 }
 
 .light {
-  --color-bg: #F0F0EC;
-  --color-surface: #F8F8F5;
-  --color-surface2: #E8E8E3;
-  --color-ink: #1C1C1E;
-  --color-muted: #72727A;
+  --color-bg: #f0f0ec;
+  --color-surface: #f8f8f5;
+  --color-surface2: #e8e8e3;
+  --color-ink: #1c1c1e;
+  --color-muted: #72727a;
   --color-line: rgba(0, 0, 0, 0.08);
   --color-line2: rgba(0, 0, 0, 0.15);
-  --color-edit: var(--color-flame);      
+  --color-edit: var(--color-flame);
   --shadow-aura: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
-  --shadow-flat: 0 12px 0px 0px rgba(0, 0, 0, 0.50);
+  --shadow-flat: 0 12px 0px 0px rgba(0, 0, 0, 0.5);
   --shadow-aura-strong: 0 4px 20px 0 rgba(0, 0, 0, 0.14);
 }
 
@@ -63,5 +70,7 @@ body {
   margin: 0 auto;
   padding: 18px 18px 14px 18px;
   background-color: var(--color-bg);
-  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+  transition:
+    background-color 200ms ease-in-out,
+    color 200ms ease-in-out;
 }

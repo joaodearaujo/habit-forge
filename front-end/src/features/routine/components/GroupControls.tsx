@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Pencil, Trash2, Check, X } from "lucide-react";
-import { useUpdateGroup, useDeleteGroup } from "../hooks/useGroup";
+import { useState } from 'react';
+import { Pencil, Trash2, Check, X } from 'lucide-react';
+import { useUpdateGroup, useDeleteGroup } from '../hooks/useGroup';
 
 interface Props {
   groupId: string;
@@ -26,7 +26,7 @@ export function GroupControls({ groupId, currentTitle }: Props) {
 
     updateGroup(
       { id: groupId, body: { title } },
-      { onSuccess: () => setIsEditing(false) }
+      { onSuccess: () => setIsEditing(false) },
     );
   };
 
@@ -38,31 +38,36 @@ export function GroupControls({ groupId, currentTitle }: Props) {
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm(`Confirm deleting "${currentTitle}"? It'll delete its tasks too.`)) return;
+    if (
+      !confirm(
+        `Confirm deleting "${currentTitle}"? It'll delete its tasks too.`,
+      )
+    )
+      return;
     deleteGroup(groupId);
   };
 
   if (isEditing) {
     return (
-      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="flex items-center gap-2"
+        onClick={(e) => e.stopPropagation()}
+      >
         <input
           autoFocus
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="text-xs font-secondary bg-surface border-2 border-line rounded-lg px-2 py-1 outline-none"
         />
-        <button 
+        <button
           onClick={handleSave}
-          disabled={isUpdating} 
-          className="text-muted hover:text-ink"
-          >
-          <Check className="size-4" />
-        </button>
-        
-        <button 
-          onClick={handleCancel} 
+          disabled={isUpdating}
           className="text-muted hover:text-ink"
         >
+          <Check className="size-4" />
+        </button>
+
+        <button onClick={handleCancel} className="text-muted hover:text-ink">
           <X className="size-4" />
         </button>
       </div>

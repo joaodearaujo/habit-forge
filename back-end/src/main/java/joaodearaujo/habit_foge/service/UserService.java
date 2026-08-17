@@ -1,6 +1,10 @@
 package joaodearaujo.habit_foge.service;
 
+import joaodearaujo.habit_foge.domain.entity.Routine;
+import joaodearaujo.habit_foge.domain.entity.Task;
+import joaodearaujo.habit_foge.domain.entity.TaskGroup;
 import joaodearaujo.habit_foge.domain.entity.User;
+import joaodearaujo.habit_foge.domain.enums.TaskCategory;
 import joaodearaujo.habit_foge.dto.request.UserRequest;
 import joaodearaujo.habit_foge.dto.response.UserResponse;
 import joaodearaujo.habit_foge.repository.UserRepository;
@@ -20,15 +24,36 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     public UserResponse createUser(UserRequest userRequest) {
         if (userRepository.findByEmail(userRequest.email()).isPresent()) {
             throw new IllegalArgumentException("Email already in use.");
         }
 
         User newUser = convertToEntity(userRequest);
+        attachDefaultRoutine(newUser);
+
         userRepository.save(newUser);
 
         return convertToResponse(newUser);
+    }
+
+    private void attachDefaultRoutine(User user) {
+        Routine dailyRoutine = new Routine("Daily", null, user);
+
+        TaskGroup morningGroup = new TaskGroup("Morning", null, dailyRoutine);
+
+        Task firstTask = new Task(
+                TaskCategory.MIND,
+                "First Good Task",
+                null,
+                true,
+                morningGroup
+        );
+
+        morningGroup.getTasks().add(firstTask);
+        dailyRoutine.getGroupList().add(morningGroup);
+        user.getRoutines().add(dailyRoutine);
     }
 
     private User convertToEntity(UserRequest request) {

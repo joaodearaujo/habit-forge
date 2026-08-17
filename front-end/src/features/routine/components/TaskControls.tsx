@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Pencil, Trash2, Check, X } from "lucide-react";
-import { useUpdateTask, useDeleteTask } from "../hooks/useTasks";
+import { useState } from 'react';
+import { Pencil, Trash2, Check, X } from 'lucide-react';
+import { useUpdateTask, useDeleteTask } from '../hooks/useTasks';
 
 interface Props {
   taskId: string;
@@ -26,7 +26,7 @@ export function TaskControls({ taskId, currentTitle }: Props) {
 
     updateTask(
       { id: taskId, body: { title } },
-      { onSuccess: () => setIsEditing(false) }
+      { onSuccess: () => setIsEditing(false) },
     );
   };
 
@@ -44,14 +44,21 @@ export function TaskControls({ taskId, currentTitle }: Props) {
 
   if (isEditing) {
     return (
-      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="flex items-center gap-2"
+        onClick={(e) => e.stopPropagation()}
+      >
         <input
           autoFocus
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="text-xs font-secondary bg-surface border-2 border-line rounded-lg px-2 py-1 outline-none"
         />
-        <button onClick={handleSave} disabled={isUpdating} className="text-muted hover:text-ink">
+        <button
+          onClick={handleSave}
+          disabled={isUpdating}
+          className="text-muted hover:text-ink"
+        >
           <Check className="size-4" />
         </button>
         <button onClick={handleCancel} className="text-muted hover:text-ink">

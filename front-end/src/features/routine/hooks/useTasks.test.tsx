@@ -3,14 +3,16 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { useDeleteTask } from './useTasks';
-import { api } from '../api/api';
+import { api } from '../../../shared/api/api';
 
 vi.mock('../api/api');
 
 function createWrapper() {
   const queryClient = new QueryClient();
   return function Wrapper({ children }: { children: ReactNode }) {
-    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+    return (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
   };
 }
 
@@ -18,7 +20,9 @@ describe('useDeleteTask', () => {
   it('calls api.delete with the task resource and the given id', async () => {
     vi.mocked(api.delete).mockResolvedValue(undefined);
 
-    const { result } = renderHook(() => useDeleteTask(), { wrapper: createWrapper() });
+    const { result } = renderHook(() => useDeleteTask(), {
+      wrapper: createWrapper(),
+    });
     result.current.mutate('task-id-123');
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));

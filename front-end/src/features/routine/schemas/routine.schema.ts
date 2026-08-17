@@ -22,7 +22,7 @@ export const RoutineApiSchema = z.array(
     title: z.string(),
     description: z.string(),
     groups: z.array(TaskGroupApiSchema),
-  })
+  }),
 );
 
 export type RoutineDto = z.infer<typeof RoutineApiSchema>;

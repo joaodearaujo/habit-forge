@@ -1,94 +1,94 @@
-import type { FormField } from "@/components/Form/FormField";
+import type { FormField } from '@/components/Form/FormField';
 
 export const ROUTINE_FIELDS: FormField[] = [
   {
     label: 'Routine name',
     id: 'routineTitle',
-    name: 'title',          
+    name: 'title',
     placeholder: '',
     required: true,
-    type: 'text'
+    type: 'text',
   },
   {
     label: 'Routine description',
     id: 'routineDescription',
-    name: 'description',     
+    name: 'description',
     required: false,
     placeholder: '',
-    type: 'text'
-  }
+    type: 'text',
+  },
 ] as const;
 
 export const GROUP_FIELDS: FormField[] = [
   {
     label: 'Group name',
     id: 'groupTitle',
-    name: 'title',          
+    name: 'title',
     placeholder: '',
     required: true,
-    type: 'text'
+    type: 'text',
   },
   {
     label: 'Group description',
     id: 'groupDescription',
-    name: 'description',     
+    name: 'description',
     required: false,
     placeholder: '',
-    type: 'text'
-  }
+    type: 'text',
+  },
 ] as const;
 
 export const TASK_FIELDS: FormField[] = [
   {
     label: 'Task name',
     id: 'taskTitle',
-    name: 'title',          
+    name: 'title',
     placeholder: '',
     required: true,
-    type: 'text'
+    type: 'text',
   },
   {
     label: 'Category',
     id: 'taskCategory',
-    name: 'category',          
+    name: 'category',
     placeholder: '',
     required: true,
     type: 'select',
-    options:[
+    options: [
       {
         optionName: 'BODY',
-        optionValue: 'BODY'
+        optionValue: 'BODY',
       },
       {
         optionName: 'CARE',
-        optionValue: 'CARE'
+        optionValue: 'CARE',
       },
       {
         optionName: 'MIND',
-        optionValue: 'MIND'
+        optionValue: 'MIND',
       },
       {
         optionName: 'STUDY',
-        optionValue: 'STUDY'
-      }
-    ]
+        optionValue: 'STUDY',
+      },
+    ],
   },
   {
     label: 'Task description',
     id: 'taskDescription',
-    name: 'description',     
+    name: 'description',
     required: false,
     placeholder: '',
-    type: 'text'
+    type: 'text',
   },
-    {
+  {
     label: 'Core',
     id: 'taskCore',
-    name: 'isCore',          
+    name: 'isCore',
     placeholder: '',
     required: true,
     type: 'select',
-    options:[
+    options: [
       {
         optionName: 'NO',
         optionValue: 'false',
@@ -97,6 +97,6 @@ export const TASK_FIELDS: FormField[] = [
         optionName: 'YES',
         optionValue: 'true',
       },
-    ]
+    ],
   },
 ] as const;

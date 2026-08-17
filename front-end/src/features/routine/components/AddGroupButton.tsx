@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import { Plus } from "lucide-react";
-import { useCreateGroup } from "../hooks/useGroup";
-import { cn } from "@/shared/util";
+import { useEffect, useRef, useState } from 'react';
+import { Plus } from 'lucide-react';
+import { useCreateGroup } from '../hooks/useGroup';
+import { cn } from '@/shared/util';
 
 interface Props {
   routineId: string;
 }
 
-type FormState = "closed" | "open" | "closing";
+type FormState = 'closed' | 'open' | 'closing';
 
 const TITLE_MIN = 3;
 const TITLE_MAX = 50;
 const DESCRIPTION_MAX = 150;
 
 export function AddGroupButton({ routineId }: Props) {
-  const [state, setState] = useState<FormState>("closed");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [state, setState] = useState<FormState>('closed');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
 
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -30,23 +30,24 @@ export function AddGroupButton({ routineId }: Props) {
     charactersLimit: title.length < TITLE_MIN || title.length > TITLE_MAX,
   };
 
-  const isTitleInvalid = titleConditions.emptyInput || titleConditions.charactersLimit;
+  const isTitleInvalid =
+    titleConditions.emptyInput || titleConditions.charactersLimit;
   const showValidationColor = hasAttemptedSubmit;
 
   const resetFields = () => {
-    setTitle("");
-    setDescription("");
+    setTitle('');
+    setDescription('');
     setHasAttemptedSubmit(false);
-    setErrorMessage("");
+    setErrorMessage('');
   };
 
   const openForm = () => {
-    setState("open");
+    setState('open');
   };
 
   const closeForm = () => {
     if (isPending) return;
-    setState("closing");
+    setState('closing');
   };
 
   const cancelForm = () => {
@@ -55,9 +56,9 @@ export function AddGroupButton({ routineId }: Props) {
   };
 
   const toggleOpen = () => {
-    if (state === "open") {
+    if (state === 'open') {
       closeForm();
-    } else if (state === "closed") {
+    } else if (state === 'closed') {
       openForm();
     }
   };
@@ -67,21 +68,25 @@ export function AddGroupButton({ routineId }: Props) {
     setHasAttemptedSubmit(true);
 
     if (titleConditions.emptyInput) {
-      setErrorMessage("The title cannot be empty.");
+      setErrorMessage('The title cannot be empty.');
       return;
     }
 
     if (titleConditions.charactersLimit) {
-      setErrorMessage(`The title must be between ${TITLE_MIN} and ${TITLE_MAX} characters long.`);
+      setErrorMessage(
+        `The title must be between ${TITLE_MIN} and ${TITLE_MAX} characters long.`,
+      );
       return;
     }
 
     if (description.length > DESCRIPTION_MAX) {
-      setErrorMessage(`The description must be at most ${DESCRIPTION_MAX} characters long.`);
+      setErrorMessage(
+        `The description must be at most ${DESCRIPTION_MAX} characters long.`,
+      );
       return;
     }
 
-    setErrorMessage("");
+    setErrorMessage('');
 
     mutate(
       { routineId, title, description },
@@ -94,20 +99,20 @@ export function AddGroupButton({ routineId }: Props) {
           setErrorMessage(
             error instanceof Error
               ? error.message
-              : "Something went wrong creating the group. Please try again."
+              : 'Something went wrong creating the group. Please try again.',
           );
         },
-      }
+      },
     );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       cancelForm();
     }
   };
 
-  const isExpanded = state === "open";
+  const isExpanded = state === 'open';
   const showError = hasAttemptedSubmit && errorMessage.length > 0;
 
   useEffect(() => {
@@ -118,17 +123,19 @@ export function AddGroupButton({ routineId }: Props) {
 
   return (
     <div className="flex flex-col mb-2">
-
       <div
-        className={cn("grid transition-all duration-500 ease-out",
-          !isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        className={cn(
+          'grid transition-all duration-500 ease-out',
+          !isExpanded
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'grid-rows-[0fr] opacity-0',
         )}
       >
         <div className="overflow-hidden">
           <button
             onClick={toggleOpen}
             className={cn(
-              "flex items-center gap-2 text-xs cursor-pointer font-secondary text-muted border border-dashed border-line rounded-xl px-3 py-2 hover:border-edit hover:text-edit transition-all duration-300"
+              'flex items-center gap-2 text-xs cursor-pointer font-secondary text-muted border border-dashed border-line rounded-xl px-3 py-2 hover:border-edit hover:text-edit transition-all duration-300',
             )}
           >
             <Plus className="size-4" />
@@ -139,13 +146,15 @@ export function AddGroupButton({ routineId }: Props) {
 
       <div
         className={cn(
-          "grid h-full w-full transition-all duration-500 ease-out",
-          isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          'grid h-full w-full transition-all duration-500 ease-out',
+          isExpanded
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'grid-rows-[0fr] opacity-0',
         )}
         // it waits the css animations to finish
         onTransitionEnd={(e) => {
-          if (e.target === e.currentTarget && state === "closing") {
-            setState("closed");
+          if (e.target === e.currentTarget && state === 'closing') {
+            setState('closed');
           }
         }}
       >
@@ -162,15 +171,16 @@ export function AddGroupButton({ routineId }: Props) {
                   value={title}
                   onChange={(e) => {
                     setTitle(e.target.value);
-                    if (showError) setErrorMessage("");
+                    if (showError) setErrorMessage('');
                   }}
                   placeholder="Group title"
                   aria-invalid={showError}
-                  aria-describedby={showError ? "group-form-error" : undefined}
+                  aria-describedby={showError ? 'group-form-error' : undefined}
                   className={cn(
-                    "w-full text-xs font-secondary bg-surface border-2 rounded-xl px-3 py-2 outline-none transition-colors duration-200 text-ink",
-                    !showValidationColor && "border-line",
-                    showValidationColor && (isTitleInvalid ? "border-red" : "border-green-500")
+                    'w-full text-xs font-secondary bg-surface border-2 rounded-xl px-3 py-2 outline-none transition-colors duration-200 text-ink',
+                    !showValidationColor && 'border-line',
+                    showValidationColor &&
+                      (isTitleInvalid ? 'border-red' : 'border-green-500'),
                   )}
                 />
               </div>
@@ -180,7 +190,7 @@ export function AddGroupButton({ routineId }: Props) {
                   value={description}
                   onChange={(e) => {
                     setDescription(e.target.value);
-                    if (showError) setErrorMessage("");
+                    if (showError) setErrorMessage('');
                   }}
                   placeholder="Group description"
                   aria-invalid={showError}
@@ -191,8 +201,10 @@ export function AddGroupButton({ routineId }: Props) {
 
             <div
               className={cn(
-                "grid w-full transition-all duration-500 ease-in-out",
-                showError ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                'grid w-full transition-all duration-500 ease-in-out',
+                showError
+                  ? 'grid-rows-[1fr] opacity-100'
+                  : 'grid-rows-[0fr] opacity-0',
               )}
             >
               <div className="overflow-hidden">
@@ -213,7 +225,7 @@ export function AddGroupButton({ routineId }: Props) {
                 disabled={isPending}
                 className="flex-1 text-xs font-secondary font-medium text-ink border-b-3 border-b-surface2 bg-surface rounded-xl px-3 py-2 cursor-pointer hover:bg-flame hover:text-white hover:border-flame-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-500 ease-in-out"
               >
-                {isPending ? "..." : "Create"}
+                {isPending ? '...' : 'Create'}
               </button>
               <button
                 type="button"
