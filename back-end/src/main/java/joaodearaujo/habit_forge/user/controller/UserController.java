@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public UserResponse createUser(@Valid @RequestBody UserRequest request) {
         return userService.createUser(request);
     }

@@ -2,6 +2,7 @@ package joaodearaujo.habit_forge.routine.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import joaodearaujo.habit_forge.routine.entity.Routine;
+import joaodearaujo.habit_forge.routine.exceptions.RoutineAlreadyExistsException;
 import joaodearaujo.habit_forge.user.entity.User;
 import joaodearaujo.habit_forge.routine.dto.request.RoutineRequest;
 import joaodearaujo.habit_forge.shared.dto.request.UpdateNameRequest;
@@ -29,6 +30,12 @@ public class RoutineService {
     }
 
     public RoutineResponse createRoutine(RoutineRequest request, User authenticatedUser) {
+        boolean alreadyExists = routineRepository.existsByName(request.title());
+
+        if (alreadyExists) {
+            throw new RoutineAlreadyExistsException("Routine name already in use: " + request.title());
+        }
+
         Routine routine = convertToEntity(request, authenticatedUser);
 
         routineRepository.save(routine);

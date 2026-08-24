@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface RoutineRepository extends JpaRepository<Routine, String> {
     List<Routine> findByUser(User user);
+    boolean existsByName(String name);
 }

@@ -36,7 +36,7 @@ public class TaskController {
         taskService.deleteTask(id, authenticatedUser);
     }
 
-        @PatchMapping("/toggleComplete/{id}")
+    @PatchMapping("/toggleCompletion/{id}")
     public TaskResponse markTaskAsCompleted(@PathVariable String id, @AuthenticationPrincipal User authenticatedUser) {
         return taskService.markTaskAsComplete(id, authenticatedUser);
     }
