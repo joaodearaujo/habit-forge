@@ -62,7 +62,7 @@ export function AddTaskButton({ groupId }: Props) {
             />
           </Field>
         </div>
-        <div className="flex gap-3 h-fit">
+        <div className="flex gap-3 h-fit items-center">
           <select
             value={form.values.category}
             onChange={(e) => form.setField('category', e.target.value)}
