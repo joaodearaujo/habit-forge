@@ -1,6 +1,6 @@
 // src/features/auth/components/RegisterForm.tsx
 import { useState } from 'react';
-import { validateLoginFields } from '../validation/authSchema';
+import { registerSchema } from '../validation/authSchema';
 import { useAuthForm } from '../hooks/useAuthForm';
 import { AuthInput } from './AuthInput';
 import { AuthHeader } from './AuthHeader';
@@ -14,9 +14,7 @@ export function RegisterForm() {
   const [password, setPassword] = useState('');
 
   const { error, isLoading, hasAttemptedSubmit, showError, clearErrorOnChange, submit } =
-    useAuthForm('v1/user/register', ({ name, email, password }) =>
-      validateLoginFields(name, email, password),
-    );
+    useAuthForm('v1/user/register', registerSchema);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

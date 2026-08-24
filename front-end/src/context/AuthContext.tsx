@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
@@ -6,7 +7,7 @@ import {
   useCallback,
 } from 'react';
 import type { ReactNode } from 'react';
-import { api } from '@/shared/api/api';
+import { api, setUnauthorizedHandler } from '@/shared/api/api';
 import type { UserResponse } from '@/shared/types/userResponse.type';
 
 interface AuthContextValue {
@@ -22,6 +23,11 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserResponse | null>(null);
   const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => setUser(null));
+    return () => setUnauthorizedHandler(undefined);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -43,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await api.post('v1/auth/logout', {});
+      await api.post('v1/auth/logout');
     } finally {
       setUser(null);
     }

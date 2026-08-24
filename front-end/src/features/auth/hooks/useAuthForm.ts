@@ -1,15 +1,14 @@
-// src/features/auth/hooks/useAuthForm.ts
 import { useState } from 'react';
+import { z } from 'zod';
 import { api } from '@/shared/api/api';
 import type { UserResponse } from '@/shared/types/userResponse.type';
 import { useAuth } from '@/context/AuthContext';
 
-type ValidationResult = { isValid: boolean; errorMessage: string };
-
-export function useAuthForm<TPayload extends Record<string, string>>(
+export function useAuthForm<TSchema extends z.ZodType>(
   endpoint: string,
-  validate: (payload: TPayload) => ValidationResult,
+  schema: TSchema,
 ) {
+  type TPayload = z.infer<TSchema>;
   const { login } = useAuth();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,11 +22,10 @@ export function useAuthForm<TPayload extends Record<string, string>>(
 
   const submit = async (payload: TPayload) => {
     setHasAttemptedSubmit(true);
+    const result = schema.safeParse(payload);
 
-    const validation = validate(payload);
-    
-    if (!validation.isValid) {
-      setError(validation.errorMessage);
+    if (!result.success) {
+      setError(result.error.issues[0]?.message ?? 'Invalid form data.');
       return;
     }
 
@@ -35,10 +33,9 @@ export function useAuthForm<TPayload extends Record<string, string>>(
     setIsLoading(true);
 
     try {
-      const user = await api.post<UserResponse, TPayload>(endpoint, payload);
+      const user = await api.post<UserResponse, TPayload>(endpoint, result.data);
       login(user);
-    } catch (err) {
-      console.error(err);
+    } catch {
       setError('Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);

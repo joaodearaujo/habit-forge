@@ -1,68 +1,36 @@
+import { z } from 'zod';
+
 export const EMAIL_MAX = 254;
 export const NAME_MIN = 4;
 export const NAME_MAX = 64;
 export const PASSWORD_MIN = 8;
 export const PASSWORD_MAX = 64;
 
-export function validateLoginFields(email: string, password: string, name?: string) {
+const email = z
+  .string()
+  .trim()
+  .min(1, 'The email cannot be empty.')
+  .max(EMAIL_MAX, `The email must be at most ${EMAIL_MAX} characters long.`)
+  .email('Enter a valid email address.');
 
-  if (name == undefined) {
-    name = 'user';
-  }
+const password = z
+  .string()
+  .min(1, 'The password cannot be empty.')
+  .min(PASSWORD_MIN, `The password must be between ${PASSWORD_MIN} and ${PASSWORD_MAX} characters long.`)
+  .max(PASSWORD_MAX, `The password must be between ${PASSWORD_MIN} and ${PASSWORD_MAX} characters long.`);
 
-  const emailConditions = {
-    emptyInput: !email.trim(),
-    tooLong: email.length > EMAIL_MAX,
-  };
+const name = z
+  .string()
+  .trim()
+  .min(NAME_MIN, `The name must be between ${NAME_MIN} and ${NAME_MAX} characters long.`)
+  .max(NAME_MAX, `The name must be between ${NAME_MIN} and ${NAME_MAX} characters long.`);
 
-  const nameConditions = {
-    emptyInput: !name?.trim(),
-    charactersLimit:
-      name.length < NAME_MIN || name.length > NAME_MAX,
-  }
+export const loginSchema = z.object({ email, password });
+export const registerSchema = z.object({ name, email, password });
 
-  const passwordConditions = {
-    emptyInput: !password,
-    charactersLimit:
-      password.length < PASSWORD_MIN || password.length > PASSWORD_MAX,
-  };
+export type LoginPayload = z.infer<typeof loginSchema>;
+export type RegisterPayload = z.infer<typeof registerSchema>;
 
-  const isEmailInvalid = emailConditions.emptyInput || emailConditions.tooLong;
-  const isPasswordInvalid =
-    passwordConditions.emptyInput || passwordConditions.charactersLimit;
-
-  if (nameConditions.emptyInput) {
-    return { isValid: false, errorMessage: 'The name cannot be empty.' };
-  }
-  
-  if (nameConditions.charactersLimit) {
-    return {
-      isValid: false,
-      errorMessage: `The name must be between ${NAME_MIN} and ${NAME_MAX} characters long.`,
-    };
-  }
-
-  if (emailConditions.emptyInput) {
-    return { isValid: false, errorMessage: 'The email cannot be empty.' };
-  }
-
-  if (emailConditions.tooLong) {
-    return {
-      isValid: false,
-      errorMessage: `The email must be at most ${EMAIL_MAX} characters long.`,
-    };
-  }
-
-  if (passwordConditions.emptyInput) {
-    return { isValid: false, errorMessage: 'The password cannot be empty.' };
-  }
-
-  if (passwordConditions.charactersLimit) {
-    return {
-      isValid: false,
-      errorMessage: `The password must be between ${PASSWORD_MIN} and ${PASSWORD_MAX} characters long.`,
-    };
-  }
-
-  return { isValid: true, errorMessage: '', isEmailInvalid, isPasswordInvalid };
+export function getSchemaError(error: z.ZodError): string {
+  return error.issues[0]?.message ?? 'Invalid form data.';
 }
