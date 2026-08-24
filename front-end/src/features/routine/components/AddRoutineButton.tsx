@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { useCreateRoutine } from '../hooks/useRoutine';
+import { useCreateRoutine, useGetRoutine} from '../hooks/useRoutine';
 import { cn } from '@/shared/util';
 
 type FormState = 'closed' | 'open' | 'closing';
@@ -12,12 +12,14 @@ export function AddRoutineButton() {
   const [state, setState] = useState<FormState>('closed');
   const [title, setTitle] = useState('');
 
+
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { mutate, isPending } = useCreateRoutine();
+
 
   const titleConditions = {
     emptyInput: !title.trim(),
@@ -107,6 +109,8 @@ export function AddRoutineButton() {
     }
   }, [isExpanded]);
 
+   const { routines } = useGetRoutine();
+
   return (
     <div className="flex flex-1 flex-col">
       <div
@@ -120,12 +124,13 @@ export function AddRoutineButton() {
         <div className="flex overflow-hidden">
           <button
             onClick={toggleOpen}
+            disabled={routines.length > 3}
             className={cn(
-              'flex items-center justify-center gap-2 text-xs w-full cursor-pointer font-secondary text-muted border border-dashed border-line rounded-xl px-3 py-2 hover:border-edit hover:text-edit transition-all duration-300',
+              'flex items-center justify-center gap-2 text-xs w-full cursor-pointer font-secondary text-muted border border-dashed border-line rounded-xl px-3 py-2 hover:border-edit hover:text-edit transition-all duration-300 disabled:border-line disabled:text-muted/20',
             )}
           >
             <Plus className="size-4" />
-            Routine
+            {routines.length > 3 ? "You've got the max routine quantity": 'Routine'}
           </button>
         </div>
       </div>

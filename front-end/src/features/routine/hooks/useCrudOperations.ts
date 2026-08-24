@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api/api';
 
-// Extra keys let child resources (task, task-group) also invalidate the
-// parent 'v1/routine' tree that the UI actually renders from.
 export function useCreateResource<TResponse, TBody>(
   resource: string,
   extraInvalidateKeys: string[] = [],

@@ -2,7 +2,7 @@ import { Routine } from '@/features/routine/components/Routine';
 import { useGetRoutine } from '../hooks/useRoutine';
 import { Route, Routes } from 'react-router-dom';
 
-export function RoutineRouter() {
+export function RoutineDisplay() {
   const { routines } = useGetRoutine();
 
   if (routines.length === 0) {
@@ -20,7 +20,7 @@ export function RoutineRouter() {
       <Routes>
         {routines.map((routine) => (
           <Route
-            path={`/${routine?.title}`}
+            path={`/${routine.title}`}
             key={routine.id}
             element={<Routine routine={routine} />}
           />

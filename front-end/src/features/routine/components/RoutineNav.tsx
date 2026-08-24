@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { SetRoutineButton } from '../../../components/ui/Buttons/SetRoutineButton';
+import { SetRoutineButton } from './SetRoutineButton';
 import { useGetRoutine } from '../hooks/useRoutine';
 import { AddRoutineButton } from './AddRoutineButton';
 import { useEditMode } from '@/context/EditModeContext';
@@ -27,7 +27,7 @@ export function RoutineNav() {
             key={routine.id}
             title={routine.title}
             tasks={routine.groups.flatMap((group) => group.tasks)}
-            isActive={location.pathname === `/${routine?.title}`}
+            isActive={location.pathname === `/${routine.title}`}
           />
         ))}
       </div>
