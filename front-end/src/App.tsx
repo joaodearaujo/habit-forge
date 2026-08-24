@@ -1,8 +1,8 @@
 // src/App.jsx
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoginForm } from './features/auth/components/LoginForm';
-import { RoutineNav } from './features/routine/components/RoutineNav';
-import { RoutineDisplay } from './features/routine/components/RoutineDisplay';
+import { RoutineNav } from './features/routine/routine/components/RoutineNav';
+import { RoutineDisplay } from './features/routine/routine/components/RoutineDisplay';
 import { useAuth } from './context/AuthContext';
 import { Header } from './components/Header';
 import { RegisterForm } from './features/auth/components/RegisterForm';

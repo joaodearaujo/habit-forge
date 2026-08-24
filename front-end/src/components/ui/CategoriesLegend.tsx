@@ -1,5 +1,5 @@
 import { CATEGORY_COLORS } from '@/constants/categoryColors';
-import { Dot } from '@/components/ui/Dot';
+import { Dot } from '@/components/ui/icons/Dot';
 
 export function CategoriesLegend() {
   return (
