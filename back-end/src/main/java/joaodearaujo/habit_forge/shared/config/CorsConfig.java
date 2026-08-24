@@ -1,4 +1,4 @@
-package joaodearaujo.habit_forge.shared.dto.request.config;
+package joaodearaujo.habit_forge.shared.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package joaodearaujo.habit_forge.shared.dto.request.config;
+package joaodearaujo.habit_forge.shared.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
