@@ -59,11 +59,6 @@
   flex-direction: column;
   box-sizing: border-box;
 }
-
-* {
-  /* border: 1px solid red;                              */
-}
-
 body {
   max-width: 560px;
   height: 100svh;
