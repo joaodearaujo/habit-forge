@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "es2023",
+    "target": "es2023", // javascript version 
     "lib": ["ES2023"],
-    "module": "esnext",
+    "module": "esnext", // module system 
     "types": ["node"],
     "skipLibCheck": true,
 
